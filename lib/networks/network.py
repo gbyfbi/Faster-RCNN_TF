@@ -108,10 +108,12 @@ class Network(object):
             if group==1:
                 conv = convolve(input, kernel)
             else:
-                input_groups = tf.split(3, group, input)
-                kernel_groups = tf.split(3, group, kernel)
+                # input_groups = tf.split(3, group, input) THIS IS INSANELY WRONG!!!!!!!!!!!!!!
+                input_groups = tf.split(axis=3, num_or_size_splits=group, value=input)
+                # kernel_groups = tf.split(3, group, kernel) THIS INSANELY WRONG!!!!!!!!!!!!!!!
+                kernel_groups = tf.split(axis=3, num_or_size_splits=group, value=kernel)
                 output_groups = [convolve(i, k) for i,k in zip(input_groups, kernel_groups)]
-                conv = tf.concat(3, output_groups)
+                conv = tf.concat(axis=3, values=output_groups)
             if relu:
                 bias = tf.nn.bias_add(conv, biases)
                 return tf.nn.relu(bias, name=scope.name)
