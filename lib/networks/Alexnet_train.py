@@ -32,15 +32,15 @@ class Alexnet_train(Network):
 
     def setup(self):
         (self.feed('data')
-            .conv(11, 11, 96, 4, 4, name='conv1', trainable=False, padding='SAME')
-            .lrn(radius=2, alpha=2e-05, beta=0.75, name='lrn1', bias=1.0)
+            .conv(11, 11, 96, 4, 4, name='conv1', trainable=True, padding='VALID')
+            .lrn(radius=2, alpha=2e-05, beta=0.75, name='norm1', bias=1.0)
             .max_pool(3, 3, 2, 2, padding='VALID', name='pool1')
-            .conv(5, 5, 256, 1, 1, name='conv2', trainable=False, padding='SAME')
-            .lrn(radius=2, alpha=2e-05, beta=0.75, name='lrn2', bias=1.0)
+            .conv(5, 5, 256, 1, 1, name='conv2', trainable=True, padding='VALID', group=2)
+            .lrn(radius=2, alpha=2e-05, beta=0.75, name='norm2', bias=1.0)
             .max_pool(3, 3, 2, 2, padding='VALID', name='pool2')
-            .conv(3, 3, 384, 1, 1, name='conv3', trainable=False, padding='SAME')
-            .conv(3, 3, 384, 1, 1, name='conv4', trainable=False, padding='SAME')
-            .conv(3, 3, 256, 1, 1, name='conv5', trainable=False, padding='SAME')
+            .conv(3, 3, 384, 1, 1, name='conv3', trainable=True, padding='VALID')
+            .conv(3, 3, 384, 1, 1, name='conv4', trainable=True, padding='VALID', group=2)
+            .conv(3, 3, 256, 1, 1, name='conv5', trainable=True, padding='VALID', group=2)
             .max_pool(3, 3, 2, 2, padding='VALID', name='pool5'))
 
         #========= RPN ============
