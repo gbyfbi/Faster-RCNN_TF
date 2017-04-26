@@ -1,9 +1,6 @@
 import tensorflow as tf
 from networks.network import Network
 
-
-#define
-
 n_classes = 21
 _feat_stride = [16,]
 anchor_scales = [8, 16, 32]
@@ -32,15 +29,15 @@ class Alexnet_train(Network):
 
     def setup(self):
         (self.feed('data')
-            .conv(11, 11, 96, 4, 4, name='conv1', trainable=True, padding='VALID')
+            .conv(11, 11, 96, 4, 4, name='conv1', trainable=False, padding='VALID')
             .lrn(radius=2, alpha=2e-05, beta=0.75, name='norm1', bias=1.0)
             .max_pool(3, 3, 2, 2, padding='VALID', name='pool1')
-            .conv(5, 5, 256, 1, 1, name='conv2', trainable=True, padding='VALID', group=2)
+            .conv(5, 5, 256, 1, 1, name='conv2', trainable=False, padding='SAME', group=2)
             .lrn(radius=2, alpha=2e-05, beta=0.75, name='norm2', bias=1.0)
             .max_pool(3, 3, 2, 2, padding='VALID', name='pool2')
-            .conv(3, 3, 384, 1, 1, name='conv3', trainable=True, padding='VALID')
-            .conv(3, 3, 384, 1, 1, name='conv4', trainable=True, padding='VALID', group=2)
-            .conv(3, 3, 256, 1, 1, name='conv5', trainable=True, padding='VALID', group=2)
+            .conv(3, 3, 384, 1, 1, name='conv3', trainable=True, padding='SAME')
+            .conv(3, 3, 384, 1, 1, name='conv4', trainable=True, padding='SAME', group=2)
+            .conv(3, 3, 256, 1, 1, name='conv5', trainable=True, padding='SAME', group=2)
             .max_pool(3, 3, 2, 2, padding='VALID', name='pool5'))
 
         #========= RPN ============
@@ -73,14 +70,14 @@ class Alexnet_train(Network):
 
         #========= RCNN ============
         (self.feed('pool5', 'roi-data')
-            .roi_pool(7, 7, 1.0/16, name='pool_5')
-            .fc(4096, name='fc6')
+            .roi_pool(6, 6, 1.0/16, name='pool_5')
+            .fc(4096, name='fc6', is_feed_in_transpose=False)
             .dropout(0.5, name='drop6')
-            .fc(4096, name='fc7')
+            .fc(4096, name='fc7', is_feed_in_transpose=False)
             .dropout(0.5, name='drop7')
-            .fc(n_classes, relu=False, name='cls_score')
+            .fc(n_classes, relu=False, name='cls_score', is_feed_in_transpose=False)
             .softmax(name='cls_prob'))
 
         (self.feed('drop7')
-            .fc(n_classes*4, relu=False, name='bbox_pred'))
+            .fc(n_classes*4, relu=False, name='bbox_pred', is_feed_in_transpose=False))
 

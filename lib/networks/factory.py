@@ -12,6 +12,8 @@ __sets = {}
 import networks.VGGnet_train
 import networks.VGGnet_test
 import networks.Alexnet_train
+import networks.Alexnet_test
+import networks.Alexnet_test_debug
 import pdb
 import tensorflow as tf
 
@@ -31,6 +33,10 @@ def get_network(name):
        return networks.VGGnet_train()
     elif name.split('_')[1] == 'Alexnet-train':
         return networks.Alexnet_train()
+    elif name.split('_')[1] == 'Alexnet-test':
+        return networks.Alexnet_test()
+    elif name.split('_')[1] == 'Alexnet-test-debug':
+        return networks.Alexnet_test_debug()
     else:
        raise KeyError('Unknown dataset: {}'.format(name))
     

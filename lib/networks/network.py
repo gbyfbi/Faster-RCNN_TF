@@ -47,6 +47,8 @@ class Network(object):
         else:
             data_dict = np.load(data_path).item()
             for key in data_dict:
+                # if key.startswith('fc6') or key.startswith('fc8'):
+                #     continue
                 with tf.variable_scope(key, reuse=True):
                     for subkey in data_dict[key]:
                         try:
@@ -232,7 +234,7 @@ class Network(object):
         return tf.concat(concat_dim=axis, values=inputs, name=name)
 
     @layer
-    def fc(self, input, num_out, name, relu=True, trainable=True):
+    def fc(self, input, num_out, name, relu=True, trainable=True, is_feed_in_transpose=True):
         with tf.variable_scope(name) as scope:
             # only use the first input
             if isinstance(input, tuple):
@@ -243,7 +245,10 @@ class Network(object):
                 dim = 1
                 for d in input_shape[1:].as_list():
                     dim *= d
-                feed_in = tf.reshape(tf.transpose(input,[0,3,1,2]), [-1, dim])
+                if is_feed_in_transpose:
+                    feed_in = tf.reshape(tf.transpose(input,[0,3,1,2]), [-1, dim])
+                else:
+                    feed_in = tf.reshape(input, [-1, dim])
             else:
                 feed_in, dim = (input, int(input_shape[-1]))
 

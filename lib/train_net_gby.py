@@ -19,6 +19,7 @@ import pprint
 import numpy as np
 import sys
 import pdb
+import tensorflow as tf
 
 def parse_args():
     """
@@ -71,6 +72,9 @@ if __name__ == '__main__':
         cfg_from_file(args.cfg_file)
     if args.set_cfgs is not None:
         cfg_from_list(args.set_cfgs)
+
+    if args.network_name.startswith('Alexnet'):
+        cfg.PIXEL_MEANS = np.array([[[104., 117., 124.]]])
 
     print('Using config:')
     pprint.pprint(cfg)
