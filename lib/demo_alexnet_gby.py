@@ -96,7 +96,7 @@ def parse_args():
                         default='Alexnet_Alexnet-test')
     parser.add_argument('--model', dest='model', help='Model path',
                         # default='/home/gao/Downloads/Faster-RCNN_TF_gby/output/faster_rcnn_end2end/voc_2007_trainval/VGGnet_fast_rcnn_iter_70000.ckpt')
-                        default='/home/gao/Downloads/Faster-RCNN_TF_gby/output/faster_rcnn_end2end/voc_2007_trainval/VGGnet_fast_rcnn_iter_90000.ckpt')
+                        default='/home/gao/Downloads/Faster-RCNN_TF_gby/output/faster_rcnn_end2end/voc_2007_trainval/VGGnet_fast_rcnn_iter_900000.ckpt')
 
     args = parser.parse_args()
 
